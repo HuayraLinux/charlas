@@ -260,6 +260,45 @@ class EfectoNetbookLiberada(pilas.actores.Actor):
         if self.transparencia > 90:
             self.eliminar()
 
+class AlumnoItem(pilas.actores.Actor):
+	
+	def __init__(self):
+		pilas.actores.Actor.__init__(self, 'bueno4.png')
+		self.izquierda = 320
+		self.y = random.randint(-210,210)
+		self.escala = 0.5
+		
+	def actualizar(self):
+		self.izquierda -= 8
+		
+		if self.derecha < -320:
+			self.eliminar()
+			
+		return True
+			
+	def capturar(self):
+		self.eliminar()
+		EfectoAlumnoItem(self.x, self.y)
+		
+	def latir(self):
+		self.escala = [0.5, 0.8, 0.5], 2
+		return True
+		
+	
+class EfectoAlumnoItem(pilas.actores.Actor):
+	
+	def __init__(self, x, y):
+		pilas.actores.Actor.__init__(self, 'bueno4.png', x=x, y=y)
+		
+	def actualizar(self):
+		self.izquierda -= 12
+		self.escala += 0.1
+		self.transparencia += 3
+		
+		if self.transparencia > 90:
+			self.eliminar()
+			
+
 
 class Nube(pilas.actores.Actor):
 
@@ -337,6 +376,12 @@ class EscenaJuego(pilas.escena.Normal):
 
 		pilas.mundo.agregar_tarea(2, crear_netbook)
 
+		def crear_alumnoItem():
+			un_alumno = AlumnoItem()
+			items.append(un_alumno)
+			return True
+		
+		pilas.mundo.agregar_tarea(10, crear_alumnoItem)
 
 		def cuanto_toca_item(vaca, netbook):
 			netbook.capturar()
@@ -352,6 +397,21 @@ class EscenaJuego(pilas.escena.Normal):
 				pilas.cambiar_escena(EscenaGanar())
 
 		pilas.mundo.colisiones.agregar(vaca, items, cuanto_toca_item)
+
+		def cuando_toca_alumnoItem(vaca, alumnoItem):
+			alumnoItem.capturar()
+			vaca.sonreir()
+			puntos.aumentar(20)
+			puntos.escala = 3
+			puntos.escala = [1], 0.2
+			puntos.rotacion = random.randint(30, 60)
+			puntos.rotacion [0], 0.2
+			jugador.mostrar_cara_gana()
+			
+			if puntos.obtener() >= 100:
+				pilas.cambiar_escena(EscenaGanar())
+				
+		pilas.mundo.colisiones.agregar(vaca, items, cuando_toca_alumnoItem)
 
 		def crear_enemigo():
 			un_enemigo = Enemigo()
