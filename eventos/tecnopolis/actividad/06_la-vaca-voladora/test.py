@@ -27,7 +27,7 @@ class FondoContador(pilas.actores.Actor):
         self.contador_reposo = 0
         self.izquierda =  -315
         self.arriba = 235
-        t = pilas.actores.Texto("Carolina") #Nombre del jugador
+        t = pilas.actores.Texto("Jugador 1") #Nombre del jugador
         t.izquierda = -180
         t.arriba = 218
         t.escala = 0.60
@@ -263,10 +263,10 @@ class EfectoNetbookLiberada(pilas.actores.Actor):
 class AlumnoItem(pilas.actores.Actor):
 	
 	def __init__(self):
-		pilas.actores.Actor.__init__(self, 'bueno4.png')
+		pilas.actores.Actor.__init__(self, 'bueno4.png') # Elemento Jugador, que suma puntos extras
 		self.izquierda = 320
 		self.y = random.randint(-210,210)
-		self.escala = 0.5
+		self.escala = 0.6
 		
 	def actualizar(self):
 		self.izquierda -= 8
@@ -401,9 +401,9 @@ class EscenaJuego(pilas.escena.Normal):
 		def cuando_toca_alumnoItem(vaca, alumnoItem):
 			alumnoItem.capturar()
 			vaca.sonreir()
-			puntos.aumentar(20)
+			puntos.aumentar(25)
 			puntos.escala = 3
-			puntos.escala = [1], 0.2
+			puntos.escala = [1], 0.3
 			puntos.rotacion = random.randint(30, 60)
 			puntos.rotacion [0], 0.2
 			jugador.mostrar_cara_gana()
