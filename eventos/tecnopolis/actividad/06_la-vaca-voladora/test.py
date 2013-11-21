@@ -53,6 +53,7 @@ class Jugador(pilas.actores.Actor):
     def __init__(self):
         self.carga_imagenes()
         pilas.actores.Actor.__init__(self, self.normal)
+        self.escala = 0.23
         self.contador_reposo = 0
         self.izquierda =  -313
         self.arriba = 225
@@ -201,8 +202,9 @@ class Vaca(pilas.actores.Actor):
     def perder(self):
         self.estado = Perdiendo(self)
         t = pilas.actores.Texto("uuyyy !!!")
+        t.color = pilas.colores.naranja
         t.escala = 0
-        t.escala = [1], 0.2
+        t.escala = [2], 0.2
         t.rotacion = 60
         t.rotacion = [0], 0.2
 
@@ -217,22 +219,23 @@ class Vaca(pilas.actores.Actor):
     def sonreir(self):
         self.contador_sonreir = 40
 
-class Enemigo(pilas.actores.Bomba):
+class Enemigo(pilas.actores.Actor):
 
     def __init__(self):
         pilas.actores.Actor.__init__(self)
         self.imagen = "data/enemigo2.png"	# Imagen del enemigo, 1, 2 o 3.
+        self.escala = 0.5
         self.izquierda = 320
         self.y = random.randint(-210, 210)
 
     def actualizar(self):
-        self.x -= 5
+        self.x -= 7
         pilas.actores.Actor.actualizar(self)
 
 class Netbook(pilas.actores.Actor):
 
     def __init__(self):
-        pilas.actores.Actor.__init__(self, 'bueno2.png') # Elemento que suma puntos 1, 2 o 3
+        pilas.actores.Actor.__init__(self, 'bueno3.png') # Elemento que suma puntos 1, 2 o 3
         self.izquierda = 320
         self.y = random.randint(-210, 210)
 
@@ -250,7 +253,7 @@ class Netbook(pilas.actores.Actor):
 class EfectoNetbookLiberada(pilas.actores.Actor):
 
     def __init__(self, x, y):
-        pilas.actores.Actor.__init__(self, 'bueno2.png', x=x, y=y)
+        pilas.actores.Actor.__init__(self, 'bueno3_fx.png', x=x, y=y)
 
     def actualizar(self):
         self.izquierda -= 8
@@ -263,32 +266,26 @@ class EfectoNetbookLiberada(pilas.actores.Actor):
 class AlumnoItem(pilas.actores.Actor):
 	
 	def __init__(self):
-		pilas.actores.Actor.__init__(self, 'bueno4.png') # Elemento Jugador, que suma puntos extras
-		self.izquierda = 320
-		self.y = random.randint(-210,210)
-		self.escala = 0.6
+	    pilas.actores.Actor.__init__(self, 'bueno4.png') # Elemento Jugador, que suma puntos extras
+	    self.izquierda = 320
+	    self.y = random.randint(-210,210)
+	    self.escala = 0.18
 		
 	def actualizar(self):
-		self.izquierda -= 8
+	    self.izquierda -= 8
 		
-		if self.derecha < -320:
-			self.eliminar()
-			
-		return True
+	    if self.derecha < -320:
+		self.eliminar()
 			
 	def capturar(self):
 		self.eliminar()
 		EfectoAlumnoItem(self.x, self.y)
 		
-	def latir(self):
-		self.escala = [0.5, 0.8, 0.5], 2
-		return True
-		
 	
 class EfectoAlumnoItem(pilas.actores.Actor):
 	
 	def __init__(self, x, y):
-		pilas.actores.Actor.__init__(self, 'bueno4.png', x=x, y=y)
+		pilas.actores.Actor.__init__(self, 'bueno4_fx.png', x=x, y=y)
 		
 	def actualizar(self):
 		self.izquierda -= 12
@@ -363,10 +360,11 @@ class EscenaJuego(pilas.escena.Normal):
 		fondo_contador = FondoContador()
 		puntos = pilas.actores.Puntaje(y=162)
 		puntos.izquierda = jugador.derecha + 150
-		puntos.color = pilas.colores.blanco
+		puntos.color = pilas.colores.naranja
 
 		vaca = Vaca()
 		items = []
+		items2 = []
 		enemigos = []
 
 		def crear_netbook():
@@ -374,14 +372,13 @@ class EscenaJuego(pilas.escena.Normal):
 			items.append(un_item)
 			return True
 
-		pilas.mundo.agregar_tarea(2, crear_netbook)
-
 		def crear_alumnoItem():
 			un_alumno = AlumnoItem()
-			items.append(un_alumno)
+			items2.append(un_alumno)
 			return True
-		
-		pilas.mundo.agregar_tarea(10, crear_alumnoItem)
+
+		pilas.mundo.agregar_tarea(2, crear_netbook)
+		pilas.mundo.agregar_tarea(7, crear_alumnoItem)
 
 		def cuanto_toca_item(vaca, netbook):
 			netbook.capturar()
@@ -392,11 +389,9 @@ class EscenaJuego(pilas.escena.Normal):
 			puntos.rotacion = random.randint(30, 60)
 			puntos.rotacion = [0], 0.2
 			jugador.mostrar_cara_gana()
-			
+		
 			if puntos.obtener() >= 100:
 				pilas.cambiar_escena(EscenaGanar())
-
-		pilas.mundo.colisiones.agregar(vaca, items, cuanto_toca_item)
 
 		def cuando_toca_alumnoItem(vaca, alumnoItem):
 			alumnoItem.capturar()
@@ -405,20 +400,21 @@ class EscenaJuego(pilas.escena.Normal):
 			puntos.escala = 3
 			puntos.escala = [1], 0.3
 			puntos.rotacion = random.randint(30, 60)
-			puntos.rotacion [0], 0.2
+			puntos.rotacion = [0], 0.2
 			jugador.mostrar_cara_gana()
 			
 			if puntos.obtener() >= 100:
 				pilas.cambiar_escena(EscenaGanar())
 				
-		pilas.mundo.colisiones.agregar(vaca, items, cuando_toca_alumnoItem)
+		pilas.mundo.colisiones.agregar(vaca, items, cuanto_toca_item)				
+		pilas.mundo.colisiones.agregar(vaca, items2, cuando_toca_alumnoItem)
 
 		def crear_enemigo():
 			un_enemigo = Enemigo()
 			enemigos.append(un_enemigo)
 			return True
 
-		pilas.mundo.agregar_tarea(3.3, crear_enemigo)
+		pilas.mundo.agregar_tarea(2.5, crear_enemigo)
 
 
 		def cuanto_toca_enemigo(vaca, enemigo):
