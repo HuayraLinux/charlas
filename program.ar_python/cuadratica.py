@@ -69,7 +69,7 @@ if __name__ == '__main__':
             resultado['raices']['x2']
         ))
 
-    graficar('Grafico', 'y(x) = (%s*x**2) + (%s*x) + %s' % (a, b, c))
+    graficar('cuadratica_', 'y(x) = (%s*x**2) + (%s*x) + %s' % (a, b, c))
 
 
 

@@ -48,7 +48,7 @@ if __name__ == '__main__':
         print('Ordenada al origen: %s' % resultado['ordenada'])
         print('Abscisa al origen : %s' % resultado['abscisa'])
 
-    graficar('Grafico', 'y(x) = (%s*x) + %s' % (m, b))
+    graficar('lineal_', 'y(x) = (%s*x) + %s' % (m, b))
 
 
 
