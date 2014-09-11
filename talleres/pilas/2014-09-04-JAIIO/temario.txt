@@ -1,0 +1,15 @@
+Intro:
+    - Que es un motor
+    - Pilas y Python: Manual y Ejemplos
+    - Interprete Pilas
+Actores:
+    - Que son
+    - Agregar un personaje para el jugador
+    - Agregar un enemigo
+    - Agregar objetos
+Habilidades:
+    - Control por teclado
+    - Inteligencia de enemigo
+Fondo
+Colisiones
+Mapa
